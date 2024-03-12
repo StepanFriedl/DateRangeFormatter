@@ -15,7 +15,7 @@ public struct DateRangeFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = timestampFormat
         guard let startDate = formatter.date(from: start) else {
-            print("Invalid start timestamp") 
+            print("Invalid start timestamp")
             return nil
         }
         guard let endDate = formatter.date(from: end) else {
@@ -27,18 +27,16 @@ public struct DateRangeFormatter {
         var startStringComponents: [String] = []
         var endStringComponents: [String] = []
         
+        // MARK: - Hours, minutes, seconds
         if components.contains(.hoursAndMinutes) {
             var startTimeString: String = ""
             var endTimeString: String = ""
-            
             
             startTimeString += getHoursAndMinutesString(startDate)
             if components.contains(.seconds) {
                 startTimeString += getSecondsString(startDate)
             }
-            if let hours = difference.hour,
-               let minutes = difference.minute,
-               hours > 0 || minutes > 0 {
+            if getHoursAndMinutesString(endDate) != getHoursAndMinutesString(startDate) {
                 endTimeString += getHoursAndMinutesString(endDate)
                 if components.contains(.seconds) {
                     endTimeString += getSecondsString(endDate)
@@ -48,25 +46,24 @@ public struct DateRangeFormatter {
             endStringComponents.append(endTimeString)
         }
         
+        // MARK: - Days, months
         if components.contains(.daysAndMonths) {
             endStringComponents.append(getDayString(endDate))
-            if let days = difference.day,
-               days > 0 {
+            if getDayString(startDate) != getDayString(endDate) {
                 startStringComponents.append(getDayString(startDate))
             }
             endStringComponents.append(getMonthString(endDate))
-            if let months = difference.month,
-               let years = difference.year,
-               months > 0 || years > 0 {
+            if getYearString(startDate) != getYearString(endDate) || getMonthString(startDate) != getMonthString(endDate) {
                 startStringComponents.append(getMonthString(startDate))
             }
         }
         
+        // MARK: - Years
         if components.contains(.years) {
             endStringComponents.append(getYearString(endDate))
-            if let years = difference.year,
-               years > 0 {
+            if getYearString(startDate) != getYearString(endDate) {
                 startStringComponents.append(getYearString(startDate))
+
             }
         }
         
@@ -76,7 +73,7 @@ public struct DateRangeFormatter {
 
 private func getHoursAndMinutesString(_ date: Date) -> String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mm"
+    formatter.dateFormat = "HH:mm"
     return formatter.string(from: date)
 }
 
