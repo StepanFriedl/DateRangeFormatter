@@ -66,8 +66,11 @@ public struct DateRangeFormatter {
 
             }
         }
-        
-        return "\(startStringComponents.joined(separator: " ")) - \(endStringComponents.joined(separator: " "))"
+        if startStringComponents.count > 0 {
+            return "\(startStringComponents.joined(separator: " ")) - \(endStringComponents.joined(separator: " "))"
+        } else {
+            return "\(endStringComponents.joined(separator: " "))"
+        }
     }
 }
 
